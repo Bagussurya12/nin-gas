@@ -55,6 +55,15 @@ export const routes: Routes = [
         canActivate: [IsLoggedInGuard],
         data: { layout: 'app' },
       },
+      {
+        path: 'user-management/edit/:id',
+        loadChildren: () =>
+          import(
+            './pages/settings/users/user-management/edit/edit.module'
+          ).then((m) => m.EditModule),
+        canActivate: [IsLoggedInGuard],
+        data: { layout: 'app' },
+      },
     ],
   },
 

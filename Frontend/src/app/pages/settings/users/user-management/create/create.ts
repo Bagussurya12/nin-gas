@@ -40,17 +40,17 @@ export class Create {
         'Content-Type': 'application/json',
       });
 
-      this.message = 'User berhasil dibuat!';
+      this.message = 'Pengguna berhasil dibuat!';
       this.fullname = '';
       this.username = '';
       this.email = '';
       this.password = '';
       this.router.navigate(['/gas/settings/users/user-management'], {
-        state: { message: 'User berhasil dibuat!' },
+        state: { message: 'Pengguna berhasil dibuat!' },
       });
     } catch (error: any) {
       console.error(error);
-      this.message = 'Gagal membuat user!';
+      this.message = 'Gagal membuat pengguna!';
     } finally {
       this.isLoading = false;
     }

@@ -11,10 +11,40 @@ class UserController {
   // =====================
   async getAllUsers(req, res) {
     try {
-      const users = await prisma.user.findMany({
-        select: { id: true, fullname: true, username: true, email: true },
+      const { search = "", page = 1, limit = 10 } = req.query;
+      const skip = (page - 1) * limit;
+
+      const where = search
+        ? {
+            OR: [
+              { fullname: { contains: search, mode: "insensitive" } },
+              { username: { contains: search, mode: "insensitive" } },
+              { email: { contains: search, mode: "insensitive" } },
+            ],
+          }
+        : {};
+
+      const [users, total] = await Promise.all([
+        prisma.user.findMany({
+          where,
+          skip: Number(skip),
+          take: Number(limit),
+          select: { id: true, fullname: true, username: true, email: true },
+          orderBy: { fullname: "asc" },
+        }),
+        prisma.user.count({ where }),
+      ]);
+
+      res.json({
+        success: true,
+        data: users,
+        pagination: {
+          total,
+          page: Number(page),
+          limit: Number(limit),
+          totalPages: Math.ceil(total / limit),
+        },
       });
-      res.json({ success: true, data: users });
     } catch (err) {
       console.error(err);
       res
@@ -30,7 +60,7 @@ class UserController {
     try {
       const user = await prisma.user.findUnique({
         where: { id: Number(req.params.id) },
-        select: { id: true, username: true, email: true },
+        select: { id: true, fullname: true, username: true, email: true },
       });
 
       if (!user) {
