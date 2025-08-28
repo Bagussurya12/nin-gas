@@ -126,3 +126,19 @@ model MealRequestDetail {
   @@index([meal_request_id])
   @@schema("public")
 }
+model Guest {
+  id            Int       @id @default(autoincrement())
+  fullname      String
+  id_card        String
+  email         String?
+  phone         String?
+  company       String?
+  visit_purpose String?
+  status        String    @default("expected") // expected, checked_in, checked_out, cancelled
+  check_in      DateTime?
+  check_out     DateTime?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  @@schema("public")
+}
