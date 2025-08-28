@@ -46,6 +46,15 @@ export const routes: Routes = [
         canActivate: [IsLoggedInGuard],
         data: { layout: 'app' },
       },
+      {
+        path: 'user-management/create',
+        loadChildren: () =>
+          import(
+            './pages/settings/users/user-management/create/create.module'
+          ).then((m) => m.CreateModule),
+        canActivate: [IsLoggedInGuard],
+        data: { layout: 'app' },
+      },
     ],
   },
 

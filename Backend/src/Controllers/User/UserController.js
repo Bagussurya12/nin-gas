@@ -53,8 +53,8 @@ class UserController {
   // =====================
   async createUser(req, res) {
     try {
-      const { username, email, password } = req.body;
-      if (!username || !email || !password) {
+      const { fullname, username, email, password } = req.body;
+      if (!fullname || !username || !email || !password) {
         return res
           .status(400)
           .json({ success: false, message: "All fields are required" });
@@ -63,8 +63,8 @@ class UserController {
       const hashedPassword = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
 
       const newUser = await prisma.user.create({
-        data: { username, email, password: hashedPassword },
-        select: { id: true, username: true, email: true },
+        data: { fullname, username, email, password: hashedPassword },
+        select: { id: true, fullname: true, username: true, email: true },
       });
 
       res.status(201).json({ success: true, data: newUser });

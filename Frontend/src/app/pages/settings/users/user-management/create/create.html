@@ -1,0 +1,116 @@
+<div class="flex justify-center items-center min-h-screen">
+  <div
+    class="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 transform transition duration-500 hover:scale-[1.02]"
+  >
+    <!-- Title -->
+    <div class="flex items-center justify-center mb-6">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="currentColor"
+        class="size-6"
+      >
+        <path
+          d="M5.25 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM2.25 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM18.75 7.5a.75.75 0 0 0-1.5 0v2.25H15a.75.75 0 0 0 0 1.5h2.25v2.25a.75.75 0 0 0 1.5 0v-2.25H21a.75.75 0 0 0 0-1.5h-2.25V7.5Z"
+        />
+      </svg>
+
+      <h2 class="text-xl ml-2 font-extrabold text-gray-800">Create User</h2>
+    </div>
+
+    <!-- Form -->
+    <form (ngSubmit)="onSubmit()" class="space-y-5">
+      <!-- Fullname -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">
+          Fullname
+        </label>
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="fullname"
+            name="fullname"
+            required
+            class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 p-3 shadow-sm"
+            placeholder="John Doe"
+          />
+        </div>
+      </div>
+
+      <!-- Username -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">
+          Username
+        </label>
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="username"
+            name="username"
+            required
+            class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 p-3 shadow-sm"
+            placeholder="johndoe"
+          />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">
+          Email
+        </label>
+        <div class="relative">
+          <input
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            required
+            class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 p-3 shadow-sm"
+            placeholder="example@email.com"
+          />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-700 mb-1">
+          Password
+        </label>
+        <div class="relative">
+          <input
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            required
+            class="w-full rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500 p-3 shadow-sm"
+            placeholder="••••••••"
+          />
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="isLoading"
+        class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg transition transform hover:scale-[1.02] shadow-md disabled:opacity-50 flex items-center justify-center"
+      >
+        <svg
+          *ngIf="!isLoading"
+          class="w-5 h-5 mr-2"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          />
+        </svg>
+        {{ isLoading ? "Processing..." : "Create User" }}
+      </button>
+    </form>
+  </div>
+</div>
