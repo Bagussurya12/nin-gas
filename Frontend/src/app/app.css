@@ -1,0 +1,60 @@
+.not-found-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 2rem;
+
+  .content {
+    text-align: center;
+    max-width: 600px;
+    padding: 3rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+    svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 1.5rem;
+      color: #ff5252;
+    }
+
+    h1 {
+      font-size: 6rem;
+      margin: 0;
+      color: #3f51b5;
+      line-height: 1;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      margin: 1rem 0;
+      color: #333;
+    }
+
+    .description {
+      color: #666;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .home-button {
+      margin-top: 1rem;
+      padding: 0.75rem 2rem;
+      font-size: 1rem;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+
+      mat-icon {
+        margin-right: 8px;
+      }
+
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(63, 81, 181, 0.3);
+      }
+    }
+  }
+}

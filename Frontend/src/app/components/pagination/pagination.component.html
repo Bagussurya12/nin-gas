@@ -1,0 +1,45 @@
+<nav class="flex justify-end mb-10" aria-label="Pagination">
+  <ul class="inline-flex items-center -space-x-px rounded-md shadow-sm">
+    <!-- Previous Button -->
+    <li>
+      <button 
+        class="relative inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-blue-600 hover:text-white disabled:opacity-50"
+        [disabled]="currentPage <= 1"
+        (click)="selectPage(currentPage - 1)">
+        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+        </svg>
+        Prev
+      </button>
+    </li>
+
+    <!-- Page Numbers -->
+    <li *ngFor="let page of pages">
+      <button
+        class="relative inline-flex items-center px-4 py-2 text-sm font-semibold"
+        [ngClass]="{
+          'bg-blue-700 text-white z-10': page === currentPage,
+          'bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-blue-600 hover:text-white': page !== currentPage
+        }"
+        (click)="page > 0 && selectPage(page)"
+        [disabled]="page <= 0"
+      >
+        <ng-container *ngIf="page > 0; else dots">{{ page }}</ng-container>
+        <ng-template #dots>...</ng-template>
+      </button>
+    </li>
+
+    <!-- Next Button -->
+    <li>
+      <button 
+        class="relative inline-flex items-center px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-blue-600 hover:text-white disabled:opacity-50"
+        [disabled]="currentPage >= roundedTotalPages"
+        (click)="selectPage(currentPage + 1)">
+        Next
+        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </li>
+  </ul>
+</nav>

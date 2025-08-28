@@ -1,0 +1,118 @@
+<div
+  *ngIf="
+    layout === 'login' ||
+    layout === 'wizard' ||
+    layout === 'export' ||
+    layout === 'electronic'
+  "
+>
+  <router-outlet></router-outlet>
+</div>
+
+<div *ngIf="layout === 'app'">
+  <div>
+    <button
+      (click)="toggleSidebar()"
+      class="fixed top-4 left-4 z-30 p-3 rounded-full bg-blue-500 text-white shadow-lg hover:bg-blue-600 transition duration-300"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="w-6 h-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M4 6h16M4 12h16m-7 6h7"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <div
+    *ngIf="isSidebarOpen"
+    class="fixed inset-0 bg-black bg-opacity-50 z-20"
+    (click)="toggleSidebar()"
+  ></div>
+
+  <!-- Sidebar -->
+  <div
+    [ngClass]="{
+      '-translate-x-full': !isSidebarOpen,
+      'translate-x-0': isSidebarOpen
+    }"
+    class="w-70 h-screen flex fixed top-0 left-0 z-30 transition-transform duration-300 bg-white px-4 shadow-lg"
+  >
+    <nav class="menu-list js-main-menu">
+      <div class="main-menu transform">
+        <div class="navbar-inner">
+          <!-- Logo -->
+          <div
+            class="text-center mt-8 mb-8 animate__animated animate__bounceIn"
+          >
+            <div class="flex items-center justify-center mb-4">
+              <img
+                src="assets/images/nok.png"
+                alt="NOK Logo"
+                class="h-16 w-auto object-contain hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+          </div>
+
+          <ul class="flex flex-col justify-center">
+            <li class="group relative pb-2.5 text-sm">
+              <a
+                class="flex items-center text-gray-800 cursor-pointer"
+                [routerLink]="'/gas/home'"
+                [class.font-semibold]="activeRoute.startsWith('/gas/home')"
+              >
+                <div
+                  class="w-8 h-8 flex items-center justify-center mr-3 pointer-events-none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="w-5 h-5"
+                  >
+                    <path
+                      d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z"
+                    />
+                    <path
+                      d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z"
+                    />
+                  </svg>
+                </div>
+                Home
+                <span
+                  class="bg-blue absolute h-5 -right-5 rounded-tl-lg rounded-bl-lg group-hover:opacity-100 transition-all pointer-events-none"
+                  style="width: 5px"
+                  [class.opacity-0]="!activeRoute.startsWith('/home')"
+                >
+                </span>
+              </a>
+            </li>
+            <li>
+              <app-master-data></app-master-data>
+              <app-settings-link></app-settings-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Main Content -->
+  <div
+    class="main-content transition-all ease-in-out"
+    id="panel"
+    [ngClass]="{ 'ml-0': !isSidebarOpen, 'ml-[14rem]': isSidebarOpen }"
+  >
+    <div id="main-body" class="mx-14">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

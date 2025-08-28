@@ -1,0 +1,49 @@
+import { NgModule } from '@angular/core';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { IsNotLoggedInGuard } from './guards/not-login/is-not-logged-in-guard';
+import { IsLoggedInGuard } from './guards/login/is-logged-in-guard';
+import { HomeModule } from './pages/home/home.module';
+import { NotFoundComponent } from './pages/auth/not-found/not-found';
+
+function protectRoutes(routes: Routes): Routes {
+  return routes.map(route => ({
+    ...route,
+    canActivate: route.canActivate ? [...route.canActivate, ] : []
+  }));
+}
+
+const protectedRoutes: Routes = protectRoutes([
+]);
+
+const routes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./pages/auth/login/login').then(m => m.LoginComponent),
+    canActivate: [IsNotLoggedInGuard],
+    data: { layout: 'login' }
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/auth/login/login').then(m => m.LoginComponent),
+    canActivate: [IsNotLoggedInGuard],
+    data: { layout: 'login' }
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule),
+    canActivate: [IsLoggedInGuard],
+    data: { layout: 'app' }
+  },
+  {
+    path: '**',
+    component: NotFoundComponent,
+    data: { layout: 'login' }
+  }
+];
+
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }

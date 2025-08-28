@@ -1,0 +1,7 @@
+.box-counter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  padding: 20px;
+}

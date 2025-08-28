@@ -1,0 +1,24 @@
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import 
+import { AppComponent } from './app';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientModule } from '@angular/common/http';
+import { MasterDataModule } from './components/sidebarmenu/master-data/master-data.module';
+
+@NgModule({
+  declarations: [
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule, 
+    BrowserAnimationsModule,
+    HttpClientModule,
+    HttpClientModule,
+    // SettingsLinkModule,
+    MasterDataModule,
+  ],
+  providers: [
+  ],
+})
+export class AppModule { }
