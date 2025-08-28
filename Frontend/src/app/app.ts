@@ -14,6 +14,7 @@ import { MasterDataComponent } from './components/sidebarmenu/master-data/master
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PermissionService } from './services/permission/permission.service.js';
 import { SettingsLinkComponent } from './components/sidebarmenu/settings-link/settings-link.component.js';
+import { Catering } from './components/sidebarmenu/catering/catering';
 
 @Component({
   selector: 'app-root',
@@ -26,6 +27,7 @@ import { SettingsLinkComponent } from './components/sidebarmenu/settings-link/se
     RouterOutlet,
     MasterDataComponent,
     SettingsLinkComponent,
+    Catering,
   ],
   providers: [AuthService],
   templateUrl: './app.html',
