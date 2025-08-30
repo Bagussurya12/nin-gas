@@ -134,6 +134,7 @@ model Guest {
   phone         String?
   company       String?
   visit_purpose String?
+  visit_date           DateTime?  @db.Date  
   status        String    @default("expected") // expected, checked_in, checked_out, cancelled
   check_in      DateTime?
   check_out     DateTime?

@@ -18,11 +18,17 @@ async function main() {
     "Settings - User - Can Update User Management",
     "Settings - User - Can Delete User Management",
     // Master Data
-    "Settings - Catering - Can List Catering Management",
-    "Settings - Catering - Can Create Catering Management",
-    "Settings - Catering - Can Show Catering Management",
-    "Settings - Catering - Can Update Catering Management",
-    "Settings - Catering - Can Delete Catering Management",
+    "Catering - Can List Catering Management",
+    "Catering - Can Create Catering Management",
+    "Catering - Can Show Catering Management",
+    "Catering - Can Update Catering Management",
+    "Catering - Can Delete Catering Management",
+    // Guest List Data
+    "Guests - Can List Guests Management",
+    "Guests - Can Create Guests Management",
+    "Guests - Can Show Guests Management",
+    "Guests - Can Update Guests Management",
+    "Guests - Can Delete Guests Management",
   ];
 
   const permissionRecords = [];
