@@ -20,6 +20,7 @@ async function main() {
       "Delivery",
       "Psikotest",
       "Vendor",
+      "Lain-lain",
     ]),
     visit_date: faker.date.between({
       from: "2025-08-01T00:00:00.000Z",

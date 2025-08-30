@@ -4,23 +4,64 @@ const prisma = new PrismaClient();
 class GuestsController {
   async getAllGuest(req, res) {
     try {
-      const { search = "", page = 1, limit = 10 } = req.query;
+      const {
+        search = "",
+        status,
+        visit_purpose,
+        startDate,
+        endDate,
+        page = 1,
+        limit = 10,
+      } = req.query;
 
       const pageNumber = Number(page) || 1;
       const limitNumber = Number(limit) || 10;
       const skip = (pageNumber - 1) * limitNumber;
 
-      const where = search
-        ? {
-            OR: [
-              { fullname: { contains: search, mode: "insensitive" } },
-              { email: { contains: search, mode: "insensitive" } },
-              { idCard: { contains: search, mode: "insensitive" } },
-              { company: { contains: search, mode: "insensitive" } },
-              { visit_purpose: { contains: search, mode: "insensitive" } },
-            ],
-          }
-        : {};
+      const where = {
+        AND: [],
+      };
+
+      // filter search
+      if (search) {
+        where.AND.push({
+          OR: [
+            { fullname: { contains: search, mode: "insensitive" } },
+            { email: { contains: search, mode: "insensitive" } },
+            { id_card: { contains: search, mode: "insensitive" } },
+            { company: { contains: search, mode: "insensitive" } },
+          ],
+        });
+      }
+
+      if (status) {
+        where.AND.push({ status });
+      }
+
+      if (visit_purpose) {
+        where.AND.push({ visit_purpose });
+      }
+
+      if (startDate && endDate) {
+        where.AND.push({
+          visit_date: {
+            gte: new Date(startDate),
+            lte: new Date(endDate),
+          },
+        });
+      } else if (startDate) {
+        where.AND.push({
+          visit_date: {
+            gte: new Date(startDate),
+          },
+        });
+      } else if (endDate) {
+        where.AND.push({
+          visit_date: {
+            lte: new Date(endDate),
+          },
+        });
+      }
 
       const total = await prisma.guest.count({ where });
 

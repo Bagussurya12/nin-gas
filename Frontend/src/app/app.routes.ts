@@ -67,6 +67,20 @@ export const routes: Routes = [
     ],
   },
 
+  {
+    path: 'gas/guest',
+    canActivate: [IsLoggedInGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./pages/Guest/guest/guest.module').then((m) => m.GuestModule),
+        canActivate: [IsLoggedInGuard],
+        data: { layout: 'app' },
+      },
+    ],
+  },
+
   // Default route (redirect to login)
   {
     path: '',
