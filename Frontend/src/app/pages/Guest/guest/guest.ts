@@ -40,6 +40,50 @@ export class GuestComponent {
     }
   }
 
+  async exportData() {
+    this.loading = true;
+    this.successMessage = null;
+    this.error = null;
+
+    try {
+      const params = new URLSearchParams();
+      if (this.searchTerm) params.append('search', this.searchTerm);
+      if (this.selectedStatus) params.append('status', this.selectedStatus);
+      if (this.selectedPurpose)
+        params.append('visit_purpose', this.selectedPurpose);
+      if (this.startDate) params.append('startDate', this.startDate);
+      if (this.endDate) params.append('endDate', this.endDate);
+
+      const response = await this.apiService.get(
+        `/guests/export?${params.toString()}`,
+        {
+          responseType: 'blob',
+        }
+      );
+
+      const blob = new Blob([response.data], {
+        type: 'text/csv;charset=utf-8;',
+      });
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'guests.csv';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+
+      this.successMessage = `Data tamu berhasil di-export!`;
+      setTimeout(() => (this.successMessage = null), 5000);
+    } catch (err: any) {
+      this.error = err.response?.data?.message || 'Gagal export data tamu';
+      console.error(err);
+    } finally {
+      this.loading = false;
+    }
+  }
+
   async getGuest() {
     this.loading = true;
     this.error = null;

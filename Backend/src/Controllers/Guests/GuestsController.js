@@ -258,7 +258,9 @@ class GuestsController {
       res.setHeader("Content-disposition", "attachment; filename=guests.csv");
       res.setHeader("Content-Type", "text/csv");
 
-      const csvStream = await ExportGuestService.exportGuestsToCSVStream();
+      const csvStream = await ExportGuestService.exportGuestsToCSVStream(
+        req.query
+      );
       csvStream.pipe(res);
     } catch (error) {
       console.error(error);
