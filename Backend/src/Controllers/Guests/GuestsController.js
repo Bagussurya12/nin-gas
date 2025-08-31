@@ -95,8 +95,18 @@ class GuestsController {
 
   async createGuest(req, res) {
     try {
-      const { fullname, id_card, email, phone, company, visit_purpose } =
-        req.body;
+      const {
+        fullname,
+        id_card,
+        email,
+        phone,
+        company,
+        visit_purpose,
+        visit_date,
+        check_in,
+        check_out,
+        status,
+      } = req.body;
 
       const guest = await prisma.guest.create({
         data: {
@@ -106,6 +116,10 @@ class GuestsController {
           phone,
           company,
           visit_purpose,
+          visit_date: visit_date ? new Date(visit_date).toISOString() : null,
+          check_in: check_in ? new Date(check_in).toISOString() : null,
+          check_out: check_out ? new Date(check_out).toISOString() : null,
+          status,
         },
       });
 
