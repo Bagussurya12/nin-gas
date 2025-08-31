@@ -66,7 +66,7 @@ export const routes: Routes = [
       },
     ],
   },
-
+  // ================ GUEST ================
   {
     path: 'gas/guest',
     canActivate: [IsLoggedInGuard],
@@ -90,6 +90,21 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/Guest/guest/create/create.module').then(
             (m) => m.CreateModule
+          ),
+        canActivate: [IsLoggedInGuard],
+        data: { layout: 'app' },
+      },
+    ],
+  },
+  {
+    path: 'gas/guest/edit/:id',
+    canActivate: [IsLoggedInGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./pages/Guest/guest/edit/edit.module').then(
+            (m) => m.EditModule
           ),
         canActivate: [IsLoggedInGuard],
         data: { layout: 'app' },

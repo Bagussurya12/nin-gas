@@ -30,7 +30,6 @@ export class Edit implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Ambil userId dari URL
     this.userId = this.route.snapshot.paramMap.get('id')!;
     this.getUserData();
   }

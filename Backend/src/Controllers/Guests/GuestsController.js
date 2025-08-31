@@ -179,14 +179,12 @@ class GuestsController {
       const guest = await prisma.guest.update({
         where: { id: Number(id) },
         data: {
-          fullname,
-          idCard,
-          email,
-          phone,
-          company,
-          visit_purpose,
-          visit_date,
-          status,
+          ...req.body,
+          visit_date: req.body.visit_date
+            ? new Date(req.body.visit_date)
+            : null,
+          check_in: req.body.check_in ? new Date(req.body.check_in) : null,
+          check_out: req.body.check_out ? new Date(req.body.check_out) : null,
         },
       });
 
