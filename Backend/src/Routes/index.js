@@ -49,6 +49,7 @@ router.get(
   checkPermission("Guests - Can List Guests Management"),
   GuestsController.getAllGuest
 );
+router.get("/guests/export", jwtAuth(), GuestsController.exportGuestsCSV);
 router.get(
   "/guests/:id",
   jwtAuth(),

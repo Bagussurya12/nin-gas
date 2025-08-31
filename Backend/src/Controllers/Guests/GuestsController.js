@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import ExportGuestService from "../../Services/Guest/ExportGuestService.js";
 const prisma = new PrismaClient();
 
 class GuestsController {
@@ -143,8 +144,15 @@ class GuestsController {
     try {
       const { id } = req.params;
 
+      if (!id || isNaN(Number(id))) {
+        return res.status(400).json({
+          success: false,
+          message: "Parameter id tidak valid",
+        });
+      }
+
       const guest = await prisma.guest.findUnique({
-        where: { id: Number(id) },
+        where: { id: Number(id) }, // Prisma schema id biasanya Int
       });
 
       if (!guest) {
@@ -221,6 +229,42 @@ class GuestsController {
       return res.status(500).json({
         success: false,
         message: "Gagal menghapus tamu",
+        error: error.message,
+      });
+    }
+  }
+
+  // Export JSON
+  async exportGuestsJSON(req, res) {
+    try {
+      const guests = await ExportGuestService.getAllGuests();
+      return res.json({
+        success: true,
+        message: "Data tamu berhasil diexport",
+        data: guests,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Gagal export data tamu",
+        error: error.message,
+      });
+    }
+  }
+
+  // Export CSV
+  async exportGuestsCSV(req, res) {
+    try {
+      res.setHeader("Content-disposition", "attachment; filename=guests.csv");
+      res.setHeader("Content-Type", "text/csv");
+
+      const csvStream = await ExportGuestService.exportGuestsToCSVStream();
+      csvStream.pipe(res);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({
+        success: false,
+        message: "Gagal export data tamu ke CSV",
         error: error.message,
       });
     }
