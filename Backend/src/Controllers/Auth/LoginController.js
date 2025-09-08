@@ -1,10 +1,11 @@
-import prisma from "../../../prisma.js";
+import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";
 import dotenv from "dotenv";
 
 dotenv.config();
+const prisma = new PrismaClient();
 
 const BCRYPT_SALT_ROUNDS = 10;
 
