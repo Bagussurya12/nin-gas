@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ApiService } from '../../../services/api/api';
 import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';

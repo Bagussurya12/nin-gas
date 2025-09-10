@@ -80,7 +80,6 @@ export const routes: Routes = [
       },
     ],
   },
-
   {
     path: 'gas/guest/create',
     canActivate: [IsLoggedInGuard],
@@ -106,6 +105,23 @@ export const routes: Routes = [
           import('./pages/Guest/guest/edit/edit.module').then(
             (m) => m.EditModule
           ),
+        canActivate: [IsLoggedInGuard],
+        data: { layout: 'app' },
+      },
+    ],
+  },
+
+  // Catering
+  {
+    path: 'gas/catering/meal-ordering-system',
+    canActivate: [IsLoggedInGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import(
+            './pages/catering/meal-ordering-system/meal-ordering-system.module'
+          ).then((m) => m.MealOrderingSystemModule),
         canActivate: [IsLoggedInGuard],
         data: { layout: 'app' },
       },

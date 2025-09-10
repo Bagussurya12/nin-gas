@@ -1,0 +1,312 @@
+<div class="min-h-screen p-6">
+  <!-- Header dengan gradient dan shadow -->
+  <div
+    class="flex flex-col sm:flex-row items-start justify-between sm:space-x-4 w-full mb-6"
+  >
+    <h1
+      class="text-2xl font-bold text-center text-transparent text-blue-800 mb-4"
+    >
+      Meal Ordering System
+    </h1>
+  </div>
+
+  <!-- Main Content Container -->
+  <div class="mx-auto">
+    <!-- Filter Section dengan card -->
+    <div class="rounded-2xl p-6 mb-8">
+      <div class="text-xl font-semibold text-gray-800 mb-4 flex">
+        <span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="size-6 mr-4"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </span>
+        Filter Orders
+      </div>
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="flex-grow">
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Search</label
+          >
+          <input
+            type="text"
+            placeholder="Type to search..."
+            [(ngModel)]="filters.name"
+            class="w-full px-4 py-3 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+          />
+        </div>
+        <div class="flex-grow">
+          <label class="block text-sm font-medium text-gray-700 mb-1"
+            >Filter by date</label
+          >
+          <input
+            type="date"
+            [(ngModel)]="filters.date"
+            class="w-full px-4 py-3 border rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200"
+          />
+        </div>
+        <div class="flex items-end">
+          <button
+            (click)="clearFilters()"
+            class="px-4 py-3 text-white rounded-xl bg-blue-600 hover:bg-blue-800 transition-colors duration-200 font-medium"
+          >
+            Cari
+          </button>
+        </div>
+        <div class="flex items-end">
+          <button
+            (click)="clearFilters()"
+            class="px-4 py-3 text-white rounded-xl bg-blue-600 hover:bg-blue-800 transition-colors duration-200 font-medium"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <!-- Table Header dengan sticky positioning -->
+      <div class="overflow-x-auto">
+        <table class="min-w-full border-collapse">
+          <thead
+            class="bg-gradient-to-r from-blue-500 to-blue-600 text-white sticky top-0"
+          >
+            <tr>
+              <th class="px-6 py-4 text-left font-medium">No</th>
+              <th
+                class="px-6 py-4 text-left font-medium cursor-pointer"
+                (click)="sortBy('prNumber')"
+              >
+                <div class="flex items-center">
+                  <span>PR Number</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                    />
+                  </svg>
+                </div>
+              </th>
+              <th
+                class="px-6 py-4 text-left font-medium cursor-pointer"
+                (click)="sortBy('nama')"
+              >
+                <div class="flex items-center">
+                  <span>Name</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                    />
+                  </svg>
+                </div>
+              </th>
+              <th class="px-6 py-4 text-left font-medium">Section</th>
+              <th
+                class="px-6 py-4 text-left font-medium cursor-pointer"
+                (click)="sortBy('tanggal')"
+              >
+                <div class="flex items-center">
+                  <span>Date</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 ml-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                    />
+                  </svg>
+                </div>
+              </th>
+              <th class="px-6 py-4 text-center font-medium">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let order of paginatedOrders; let i = index"
+              class="hover:bg-blue-50 transition-colors duration-150 border-b border-gray-200 last:border-b-0"
+            >
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="text-blue-500 font-medium">{{
+                  i + 1 + (currentPage - 1) * pageSize
+                }}</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="text-blue-600 font-medium">{{
+                  order.prNumber
+                }}</span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div
+                    class="h-10 w-10 flex-shrink-0 bg-blue-100 rounded-full flex items-center justify-center mr-3"
+                  >
+                    <span class="text-blue-800 font-medium">{{
+                      order.nama.charAt(0)
+                    }}</span>
+                  </div>
+                  <div class="text-gray-900 font-medium">{{ order.nama }}</div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span
+                  class="px-3 py-1 inline-flex text-sm leading-5 font-semibold rounded-full bg-purple-100 text-purple-800"
+                >
+                  {{ order.section }}
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                {{ order.tanggal | date : "mediumDate" }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button
+                  (click)="viewDetails(order)"
+                  class="px-4 py-2 text-sm bg-blue-600 text-white rounded-xl hover:from-blue-600 hover:to-blue-600 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                >
+                  Details
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="paginatedOrders.length === 0">
+              <td colspan="6" class="px-6 py-8 text-center">
+                <div
+                  class="flex flex-col items-center justify-center text-gray-500"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-12 w-12 mb-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <p class="text-lg font-medium">No orders found</p>
+                  <p class="mt-1">
+                    Try adjusting your search or filter to find what you're
+                    looking for.
+                  </p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination dengan info jumlah data -->
+      <div
+        class="bg-gray-50 px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-t border-gray-200"
+      >
+        <div class="text-sm text-gray-700 mb-4 sm:mb-0">
+          Showing
+          <span class="font-medium">{{
+            (currentPage - 1) * pageSize + 1
+          }}</span>
+          to
+          <span class="font-medium">{{
+            Math.min(currentPage * pageSize, totalOrders)
+          }}</span>
+          of <span class="font-medium">{{ totalOrders }}</span> results
+        </div>
+        <div class="flex items-center space-x-2">
+          <button
+            (click)="prevPage()"
+            [disabled]="currentPage === 1"
+            class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-100 disabled:opacity-50 transition-colors duration-200 flex items-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 mr-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+            Previous
+          </button>
+          <div class="flex space-x-1">
+            <button
+              *ngFor="let page of getPageNumbers()"
+              (click)="goToPage(page)"
+              [class]="
+                page === currentPage
+                  ? 'px-3 py-1 bg-blue-600 text-white rounded-lg'
+                  : 'px-3 py-1 bg-white border rounded-lg hover:bg-gray-100'
+              "
+            >
+              {{ page }}
+            </button>
+            <span
+              *ngIf="totalPages > 5 && currentPage < totalPages - 2"
+              class="px-2 py-1"
+              >...</span
+            >
+          </div>
+          <button
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages"
+            class="px-4 py-2 bg-white border rounded-lg hover:bg-gray-100 disabled:opacity-50 transition-colors duration-200 flex items-center"
+          >
+            Next
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 ml-1"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
