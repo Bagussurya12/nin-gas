@@ -10,7 +10,7 @@ import {
 import { filter, map, mergeMap } from 'rxjs';
 import { AuthService } from './services/auth/auth.service';
 import { environment } from '../environments/environment';
-import { MasterDataComponent } from './components/sidebarmenu/master-data/master-data.component';
+// import { MasterDataComponent } from './components/sidebarmenu/master-data/master-data.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { PermissionService } from './services/permission/permission.service.js';
 import { SettingsLinkComponent } from './components/sidebarmenu/settings-link/settings-link.component.js';
@@ -26,7 +26,7 @@ import { Guests } from './components/sidebarmenu/guests/guests';
     NgIf,
     RouterModule,
     RouterOutlet,
-    MasterDataComponent,
+    // MasterDataComponent,
     SettingsLinkComponent,
     Catering,
     Guests,

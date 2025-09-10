@@ -216,13 +216,13 @@
               {{ guest.company ?? "-" }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-gray-800">
-              {{ formatDateToIndo(guest.visit_date) ?? "-" }}
+              {{ formatDateToIndo(guest.visit_date) }}
             </td>
             <td
               class="px-6 py-4 whitespace-nowrap"
               [ngClass]="getStatusClass(guest.status)"
             >
-              {{ translateStatus(guest.status) ?? "-" }}
+              {{ translateStatus(guest.status) }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
               <div class="flex justify-center gap-2">

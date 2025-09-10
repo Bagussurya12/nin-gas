@@ -6,9 +6,9 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-guest',
-  imports: [CommonModule, NgFor, NgIf, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './guest.html',
-  styleUrl: './guest.css',
+  styleUrls: ['./guest.css'],
 })
 export class GuestComponent {
   guests: any[] = [];

@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-create',
-  imports: [CommonModule, NgFor, NgIf, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './create.html',
   styleUrl: './create.css',
 })
