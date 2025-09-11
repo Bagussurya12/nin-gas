@@ -5,7 +5,7 @@ generator client {
 datasource db {
   provider = "postgresql" 
   url      = env("DATABASE_URL")
-   schemas  = ["public"]
+  schemas  = ["public"]
 }
 
 model User {
@@ -88,6 +88,7 @@ model MempData {
   dtbirth        DateTime?
   strtype        String?
   dtrenewal      DateTime?
+  strrfid        String?
 
   mealRequests MealRequest[]
   @@map("mempdata")  
@@ -98,40 +99,49 @@ model MealRequest {
   id           Int       @id @default(autoincrement())
   pr_number    String
   name         String
-  email        String
   section      String?
   shift        String?
   confirmation Boolean   @default(false)
-  is_send_email Boolean   @default(false)
+
   created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  deleted_at   DateTime?
 
   MempData  MempData   @relation(fields: [pr_number], references: [strprno])
   details   MealRequestDetail[]
 
   @@schema("public")
-
 }
+
 model MealRequestDetail {
   id              Int       @id @default(autoincrement())
   meal_request_id Int
-  emp_pr_number  String?
+  emp_pr_number   String?
   date            DateTime  @db.Date  
   is_selected     Boolean   @default(false)
+  is_taken        Boolean   @default(false)
+  taken_at        DateTime?
+
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  deleted_at      DateTime?
 
   MealRequest MealRequest @relation(fields: [meal_request_id], references: [id], onDelete: Cascade)
 
   @@index([meal_request_id])
   @@schema("public")
 }
+
+
 model Guest {
   id            Int       @id @default(autoincrement())
   fullname      String
-  id_card        String
+  id_card       String
   email         String?
   phone         String?
   company       String?
   visit_purpose String?
-  visit_date           DateTime?  @db.Date  
+  visit_date    DateTime?  @db.Date  
   status        String    @default("expected") // expected, checked_in, checked_out, cancelled
   check_in      DateTime?
   check_out     DateTime?

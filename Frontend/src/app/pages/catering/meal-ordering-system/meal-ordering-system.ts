@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class MealOrderingSystem {
   title = 'Meal Ordering System';
+  showImportSection = false;
 
   // Sample data
   orders = [
@@ -20,60 +21,70 @@ export class MealOrderingSystem {
       nama: 'John Doe',
       section: 'HR',
       tanggal: '2023-05-15',
+      status: 'Completed',
     },
     {
       prNumber: 'PR-002',
       nama: 'Jane Smith',
       section: 'Finance',
       tanggal: '2023-05-16',
+      status: 'Processing',
     },
     {
       prNumber: 'PR-003',
       nama: 'Robert Johnson',
       section: 'IT',
       tanggal: '2023-05-17',
+      status: 'Pending',
     },
     {
       prNumber: 'PR-004',
       nama: 'Emily Davis',
       section: 'Marketing',
       tanggal: '2023-05-18',
+      status: 'Completed',
     },
     {
       prNumber: 'PR-005',
       nama: 'Michael Wilson',
       section: 'Operations',
       tanggal: '2023-05-19',
+      status: 'Processing',
     },
     {
       prNumber: 'PR-006',
       nama: 'Sarah Brown',
       section: 'Sales',
       tanggal: '2023-05-20',
+      status: 'Pending',
     },
     {
       prNumber: 'PR-007',
       nama: 'David Miller',
       section: 'IT',
       tanggal: '2023-05-21',
+      status: 'Completed',
     },
     {
       prNumber: 'PR-008',
       nama: 'Lisa Taylor',
       section: 'HR',
       tanggal: '2023-05-22',
+      status: 'Processing',
     },
     {
       prNumber: 'PR-009',
       nama: 'James Anderson',
       section: 'Finance',
       tanggal: '2023-05-23',
+      status: 'Pending',
     },
     {
       prNumber: 'PR-010',
       nama: 'Susan Thomas',
       section: 'Marketing',
       tanggal: '2023-05-24',
+      status: 'Completed',
     },
   ];
 
@@ -84,7 +95,7 @@ export class MealOrderingSystem {
 
   // Pagination properties
   currentPage = 1;
-  pageSize = 3;
+  pageSize = 5;
   sortColumn = '';
   sortDirection = 'asc';
 
@@ -168,6 +179,11 @@ export class MealOrderingSystem {
     this.currentPage = 1;
   }
 
+  applyFilters() {
+    // Filter logic is already handled in the getter
+    this.currentPage = 1;
+  }
+
   sortBy(column: string) {
     if (this.sortColumn === column) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -194,6 +210,39 @@ export class MealOrderingSystem {
     // In a real application, this would open a modal or navigate to a details page
     console.log('View details for order:', order);
     alert(`Details for ${order.nama} (${order.prNumber}) would be shown here.`);
+  }
+
+  editOrder(order: any) {
+    // In a real application, this would open an edit form
+    console.log('Edit order:', order);
+    alert(
+      `Edit form for ${order.nama} (${order.prNumber}) would be shown here.`
+    );
+  }
+
+  toggleImportSection() {
+    this.showImportSection = !this.showImportSection;
+  }
+
+  exportData() {
+    // In a real application, this would export data to CSV or Excel
+    console.log('Exporting data...');
+    alert('Data export functionality would be implemented here.');
+  }
+
+  handleFileImport(event: any) {
+    // In a real application, this would handle file import
+    const file = event.target.files[0];
+    if (file) {
+      console.log('Importing file:', file.name);
+      alert(`File "${file.name}" would be processed for import.`);
+    }
+  }
+
+  downloadSample() {
+    // In a real application, this would download a sample file
+    console.log('Downloading sample file...');
+    alert('Sample file download would be implemented here.');
   }
 
   // Helper function for template access
