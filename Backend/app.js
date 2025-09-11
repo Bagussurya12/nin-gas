@@ -1,25 +1,26 @@
+// app.js
 import express from "express";
-import { PrismaClient } from "@prisma/client"; // langsung pakai PrismaClient
+import { PrismaClient } from "@prisma/client";
 import router from "./src/Routes/index.js";
-import jwtAuth from "./src/Middlewares/Auth/JwtAuth.js";
 import dotenv from "dotenv";
 
 dotenv.config();
 
 const app = express();
-const prisma = new PrismaClient(); // inisialisasi langsung di sini
+const prisma = new PrismaClient();
 
-app.use(express.json());
+// Pastikan middleware ini dipasang SEBELUM router
+app.use(express.json()); // ← HARUS sebelum app.use("/api", router)
+app.use(express.urlencoded({ extended: true })); // ← Tambahkan ini juga
+
 app.use("/api", router);
 
-// Test endpoint root
+// Test endpoint
 app.get("/", async (req, res) => {
-  // contoh query ke database
   const users = await prisma.user.findMany();
   res.json({ message: "Server is running", users });
 });
 
-// Jalankan server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running at http://0.0.0.0:${PORT}`);

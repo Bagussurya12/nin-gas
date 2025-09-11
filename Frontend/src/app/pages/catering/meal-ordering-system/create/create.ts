@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 
 interface MealRequestDetail {
   date: Date;
-  meal_type: string;
   is_taken: boolean;
 }
 
@@ -55,7 +54,6 @@ export class Create implements OnInit {
   createDetail(): FormGroup {
     return this.fb.group({
       date: ['', Validators.required],
-      meal_type: ['', Validators.required],
       is_taken: [false],
     });
   }
@@ -117,35 +115,33 @@ export class Create implements OnInit {
   }
 
   async onSubmit(): Promise<void> {
-    console.log('onSubmit dipanggil', this.mealRequestForm.value);
-
-    // Gunakan getRawValue() agar field yang disable tetap dikirim
-    const payload = this.mealRequestForm.getRawValue();
-
-    if (this.mealRequestForm.valid || true) {
-      // jika mau tetap submit walau ada disabled
-      this.isLoading = true;
-
-      try {
-        const response = await this.apiService.post('/meal', payload);
-        this.isLoading = false;
-        alert('Meal request created successfully!');
-        this.router.navigate(['/meal-ordering-system']);
-      } catch (error) {
-        this.isLoading = false;
-        console.error('Error creating meal request:', error);
-        alert('Failed to create meal request. Please try again.');
-      }
-    } else {
-      Object.keys(this.mealRequestForm.controls).forEach((key) => {
-        this.mealRequestForm.get(key)?.markAsTouched();
-      });
-
-      this.details.controls.forEach((control) => {
-        Object.keys(control).forEach((key) => {
-          control.get(key)?.markAsTouched();
+    this.isLoading = true;
+    try {
+      const payload = this.mealRequestForm.getRawValue();
+      if (!this.mealRequestForm.valid) {
+        Object.keys(this.mealRequestForm.controls).forEach((key) => {
+          this.mealRequestForm.get(key)?.markAsTouched();
         });
+
+        (this.details.controls as FormGroup[]).forEach((group) => {
+          Object.values(group.controls).forEach((ctrl) => ctrl.markAsTouched());
+        });
+
+        alert('Please fill all required fields.');
+        return;
+      }
+
+      await this.apiService.post('/meal', payload, {
+        'Content-Type': 'application/json',
       });
+
+      alert('Meal request created successfully!');
+      this.router.navigate(['/gas/catering/meal-ordering-system']);
+    } catch (error) {
+      console.error('Error creating meal request:', error);
+      alert('Failed to create meal request. Please try again.');
+    } finally {
+      this.isLoading = false;
     }
   }
 }

@@ -40,6 +40,7 @@ export default function checkPermission(permissionName) {
           message: "You do not have permission to access this resource",
         });
       }
+      console.log("req.body di checkPermission:", req.body);
       next();
     } catch (err) {
       console.error(err);

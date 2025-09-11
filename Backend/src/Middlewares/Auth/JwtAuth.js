@@ -13,7 +13,7 @@ const jwtAuth = () => {
       const decoded = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
 
       req.user = decoded;
-
+      console.log("Authorization Header:", req.headers.authorization);
       next();
     } catch (error) {
       let message = "INVALID_ACCESS_TOKEN";

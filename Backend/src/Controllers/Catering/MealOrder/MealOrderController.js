@@ -153,9 +153,14 @@ class MealOrderController {
   }
 
   async create(req, res) {
-    const { pr_number, name, section, shift, confirmation, details } = req.body;
-
     try {
+      let { pr_number, name, section, shift, confirmation, details } = req.body;
+      details =
+        details?.map((d) => ({
+          ...d,
+          date: new Date(d.date),
+        })) || [];
+
       const meal = await prisma.mealRequest.create({
         data: {
           pr_number,
@@ -169,17 +174,19 @@ class MealOrderController {
         },
         include: {
           details: true,
-          MempData: true,
         },
       });
 
-      res.status(201).json({ success: true, data: meal });
+      return res.status(201).json({
+        success: true,
+        message: "Meal Req berhasil ditambahkan",
+        data: meal,
+      });
     } catch (error) {
-      console.error(error);
       res.status(500).json({
         success: false,
         message: "Failed to create meal request",
-        error,
+        error: error.message,
       });
     }
   }
