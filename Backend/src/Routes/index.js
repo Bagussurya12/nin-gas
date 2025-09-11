@@ -5,6 +5,7 @@ import checkPermission from "../Middlewares/Permissions/CheckPermission.js";
 import UserController from "../Controllers/User/UserController.js";
 import GuestsController from "../Controllers/Guests/GuestsController.js";
 import MealOrderController from "../Controllers/Catering/MealOrder/MealOrderController.js";
+import MempController from "../Controllers/Memp/MempController.js";
 
 const router = Router();
 
@@ -125,5 +126,13 @@ router.delete(
   jwtAuth(),
   checkPermission("MealRequest - Can Delete MealRequest"),
   MealOrderController.delete.bind(MealOrderController)
+);
+
+// Memp Routes
+router.get(
+  "/memp",
+  jwtAuth(),
+  checkPermission("MealRequest - Can Delete MealRequest"),
+  MempController.getEmployee.bind(MempController)
 );
 export default router;

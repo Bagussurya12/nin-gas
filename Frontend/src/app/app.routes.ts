@@ -128,6 +128,22 @@ export const routes: Routes = [
     ],
   },
 
+  {
+    path: 'gas/catering/meal-ordering-system/create',
+    canActivate: [IsLoggedInGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import(
+            './pages/catering/meal-ordering-system/create/create.module'
+          ).then((m) => m.CreateModule),
+        canActivate: [IsLoggedInGuard],
+        data: { layout: 'app' },
+      },
+    ],
+  },
+
   // Default route (redirect to login)
   {
     path: '',
