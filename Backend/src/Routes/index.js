@@ -4,6 +4,7 @@ import jwtAuth from "../Middlewares/Auth/JwtAuth.js";
 import checkPermission from "../Middlewares/Permissions/CheckPermission.js";
 import UserController from "../Controllers/User/UserController.js";
 import GuestsController from "../Controllers/Guests/GuestsController.js";
+import MealOrderController from "../Controllers/Catering/MealOrder/MealOrderController.js";
 
 const router = Router();
 
@@ -76,4 +77,46 @@ router.delete(
   GuestsController.deleteGuest
 );
 
+// Meal:
+router.get(
+  "/meal",
+  jwtAuth(),
+  checkPermission("MealRequest - Can List Today's Meals"),
+  MealOrderController.getAll.bind(MealOrderController)
+);
+
+router.get(
+  "/meal-today",
+  jwtAuth(),
+  checkPermission("MealRequest - Can List Today's Meals"),
+  MealOrderController.getMealToday.bind(MealOrderController)
+);
+
+router.get(
+  "/meal/:id",
+  jwtAuth(),
+  checkPermission("MealRequest - Can Show MealRequest"),
+  MealOrderController.getById.bind(MealOrderController)
+);
+
+router.post(
+  "/meal",
+  jwtAuth(),
+  checkPermission("MealRequest - Can Create MealRequest"),
+  MealOrderController.create.bind(MealOrderController)
+);
+
+router.put(
+  "/meal/:id",
+  jwtAuth(),
+  checkPermission("MealRequest - Can Update MealRequest"),
+  MealOrderController.update.bind(MealOrderController)
+);
+
+router.delete(
+  "/meal/:id",
+  jwtAuth(),
+  checkPermission("MealRequest - Can Delete MealRequest"),
+  MealOrderController.delete.bind(MealOrderController)
+);
 export default router;

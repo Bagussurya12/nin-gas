@@ -24,51 +24,104 @@ class MealOrderController {
 
   async getMealToday(req, res) {
     try {
-      const { search } = req.query; // ambil query search dari URL
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const tomorrow = new Date(today);
-      tomorrow.setDate(today.getDate() + 1);
+      const { search, page = 1, date } = req.query;
+      const limit = 10;
+      const skip = (parseInt(page) - 1) * limit;
 
-      const meals = await prisma.mealRequest.findMany({
-        where: {
-          AND: [
-            // filter search jika ada
-            search
-              ? {
-                  OR: [
-                    { pr_number: { contains: search, mode: "insensitive" } },
-                    { name: { contains: search, mode: "insensitive" } },
-                    { section: { contains: search, mode: "insensitive" } },
-                  ],
-                }
-              : {},
-            // filter details yang ada tanggal hari ini
-            {
-              details: {
-                some: {
-                  date: {
-                    gte: today,
-                    lt: tomorrow,
-                  },
+      // Normalisasi ke UTC midnight
+      let startDate;
+      let endDate;
+
+      if (date) {
+        const [year, month, day] = date.split("-").map(Number);
+
+        // Gunakan Date.UTC supaya tidak geser ke timezone lokal
+        startDate = new Date(Date.UTC(year, month - 1, day, 0, 0, 0));
+        endDate = new Date(Date.UTC(year, month - 1, day + 1, 0, 0, 0));
+      } else {
+        const today = new Date();
+        startDate = new Date(
+          Date.UTC(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate(),
+            0,
+            0,
+            0
+          )
+        );
+        endDate = new Date(
+          Date.UTC(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate() + 1,
+            0,
+            0,
+            0
+          )
+        );
+      }
+
+      const whereClause = {
+        AND: [
+          search
+            ? {
+                OR: [
+                  { pr_number: { contains: search, mode: "insensitive" } },
+                  { name: { contains: search, mode: "insensitive" } },
+                  { section: { contains: search, mode: "insensitive" } },
+                ],
+              }
+            : {},
+          {
+            details: {
+              some: {
+                date: {
+                  gte: startDate,
+                  lt: endDate,
                 },
+                is_selected: true,
               },
             },
-          ],
-        },
+          },
+        ],
+      };
+
+      const total = await prisma.mealRequest.count({ where: whereClause });
+
+      const meals = await prisma.mealRequest.findMany({
+        where: whereClause,
         include: {
-          MempData: true,
-          details: true,
+          details: {
+            where: {
+              date: {
+                gte: startDate,
+                lt: endDate,
+              },
+              is_selected: true,
+            },
+          },
         },
+        skip,
+        take: limit,
+        orderBy: { id: "asc" },
       });
 
-      res.json({ success: true, data: meals });
+      res.json({
+        success: true,
+        data: meals,
+        paginate: {
+          total,
+          page: parseInt(page),
+          last_page: Math.ceil(total / limit),
+        },
+      });
     } catch (error) {
       console.error(error);
       res.status(500).json({
         success: false,
-        message: "Failed to fetch today's meal requests",
-        error,
+        message: "Failed to fetch meal requests",
+        error: error.message,
       });
     }
   }

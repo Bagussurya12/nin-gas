@@ -29,6 +29,12 @@ async function main() {
     "Guests - Can Show Guests Management",
     "Guests - Can Update Guests Management",
     "Guests - Can Delete Guests Management",
+    // Meal Req:
+    "MealRequest - Can List Today's Meals",
+    "MealRequest - Can Show MealRequest",
+    "MealRequest - Can Create MealRequest",
+    "MealRequest - Can Update MealRequest",
+    "MealRequest - Can Delete MealRequest",
   ];
 
   const permissionRecords = [];

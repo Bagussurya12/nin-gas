@@ -23,8 +23,8 @@ async function main() {
       "Lain-lain",
     ]),
     visit_date: faker.date.between({
-      from: "2025-08-01T00:00:00.000Z",
-      to: "2025-08-30T23:59:59.999Z",
+      from: "2025-09-11T00:00:00.000Z",
+      to: "2025-09-12T23:59:59.999Z",
     }),
     status: faker.helpers.arrayElement([
       "expected",

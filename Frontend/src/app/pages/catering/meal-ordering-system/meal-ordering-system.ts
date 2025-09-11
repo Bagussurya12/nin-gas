@@ -12,81 +12,22 @@ import { FormsModule } from '@angular/forms';
 })
 export class MealOrderingSystem {
   title = 'Meal Ordering System';
+  orders: any[] = [];
   showImportSection = false;
+  loading: boolean = false;
+  error: string | null = null;
+  successMessage: string | null = null;
+  searchTerm: string = '';
+  page: number = 1;
+  limit: number = 10;
+  totalOrders: number = 0;
+  totalPages: number = 0;
+  currentPage = 1;
+  pageSize = 10;
+  sortColumn = '';
+  sortDirection = 'asc';
 
-  // Sample data
-  orders = [
-    {
-      prNumber: 'PR-001',
-      nama: 'John Doe',
-      section: 'HR',
-      tanggal: '2023-05-15',
-      status: 'Completed',
-    },
-    {
-      prNumber: 'PR-002',
-      nama: 'Jane Smith',
-      section: 'Finance',
-      tanggal: '2023-05-16',
-      status: 'Processing',
-    },
-    {
-      prNumber: 'PR-003',
-      nama: 'Robert Johnson',
-      section: 'IT',
-      tanggal: '2023-05-17',
-      status: 'Pending',
-    },
-    {
-      prNumber: 'PR-004',
-      nama: 'Emily Davis',
-      section: 'Marketing',
-      tanggal: '2023-05-18',
-      status: 'Completed',
-    },
-    {
-      prNumber: 'PR-005',
-      nama: 'Michael Wilson',
-      section: 'Operations',
-      tanggal: '2023-05-19',
-      status: 'Processing',
-    },
-    {
-      prNumber: 'PR-006',
-      nama: 'Sarah Brown',
-      section: 'Sales',
-      tanggal: '2023-05-20',
-      status: 'Pending',
-    },
-    {
-      prNumber: 'PR-007',
-      nama: 'David Miller',
-      section: 'IT',
-      tanggal: '2023-05-21',
-      status: 'Completed',
-    },
-    {
-      prNumber: 'PR-008',
-      nama: 'Lisa Taylor',
-      section: 'HR',
-      tanggal: '2023-05-22',
-      status: 'Processing',
-    },
-    {
-      prNumber: 'PR-009',
-      nama: 'James Anderson',
-      section: 'Finance',
-      tanggal: '2023-05-23',
-      status: 'Pending',
-    },
-    {
-      prNumber: 'PR-010',
-      nama: 'Susan Thomas',
-      section: 'Marketing',
-      tanggal: '2023-05-24',
-      status: 'Completed',
-    },
-  ];
+  constructor(private apiService: ApiService, private router: Router) {}
 
   filters = {
     name: '',
@@ -94,94 +35,16 @@ export class MealOrderingSystem {
   };
 
   // Pagination properties
-  currentPage = 1;
-  pageSize = 5;
-  sortColumn = '';
-  sortDirection = 'asc';
 
-  get filteredOrders() {
-    return this.orders.filter((order) => {
-      const nameMatch = order.nama
-        .toLowerCase()
-        .includes(this.filters.name.toLowerCase());
-      const dateMatch =
-        !this.filters.date || order.tanggal === this.filters.date;
-      return nameMatch && dateMatch;
-    });
-  }
-
-  get totalOrders() {
-    return this.filteredOrders.length;
-  }
-
-  get totalPages() {
-    return Math.ceil(this.totalOrders / this.pageSize);
-  }
-
-  get paginatedOrders() {
-    const startIndex = (this.currentPage - 1) * this.pageSize;
-    return this.filteredOrders.slice(startIndex, startIndex + this.pageSize);
-  }
-
-  nextPage() {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-  }
-
-  prevPage() {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  goToPage(page: number) {
-    this.currentPage = page;
-  }
-
-  getPageNumbers(): number[] {
-    const pages: number[] = [];
-    const maxVisiblePages = 5;
-
-    if (this.totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= this.totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(1);
-
-      if (this.currentPage > 3) {
-        pages.push(-1); // -1 represents the ellipsis
-      }
-
-      const start = Math.max(2, this.currentPage - 1);
-      const end = Math.min(this.totalPages - 1, this.currentPage + 1);
-
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-
-      if (this.currentPage < this.totalPages - 2) {
-        pages.push(-1); // -1 represents the ellipsis
-      }
-
-      pages.push(this.totalPages);
-    }
-
-    return pages;
+  applyFilters() {
+    this.currentPage = 1;
+    this.fetchMealTodayData();
   }
 
   clearFilters() {
-    this.filters = {
-      name: '',
-      date: '',
-    };
+    this.filters = { name: '', date: '' };
     this.currentPage = 1;
-  }
-
-  applyFilters() {
-    // Filter logic is already handled in the getter
-    this.currentPage = 1;
+    this.fetchMealTodayData();
   }
 
   sortBy(column: string) {
@@ -245,6 +108,94 @@ export class MealOrderingSystem {
     alert('Sample file download would be implemented here.');
   }
 
+  async fetchMealTodayData() {
+    this.loading = true;
+    try {
+      const params = new URLSearchParams();
+
+      if (this.filters.name) {
+        params.append('search', this.filters.name);
+      }
+
+      if (this.filters.date) {
+        params.append('date', this.filters.date);
+      }
+
+      params.append('page', this.currentPage.toString());
+      params.append('limit', this.pageSize.toString());
+
+      const res = await this.apiService.get(`/meal-today?${params.toString()}`);
+
+      this.orders = res.data.data;
+      this.totalOrders = res.data.paginate.total;
+      this.totalPages = res.data.paginate.last_page;
+    } catch (error: any) {
+      this.error =
+        error.response?.data?.message || 'Sorry, Something Went Wrong';
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  getPageNumbers() {
+    const pages: number[] = [];
+    const start = Math.max(1, this.currentPage - 2);
+    const end = Math.min(this.totalPages, this.currentPage + 2);
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    return pages;
+  }
+
+  get filteredOrders() {
+    return this.orders.filter((order) => {
+      const nameMatch = (order.name || '')
+        .toLowerCase()
+        .includes(this.filters.name.toLowerCase());
+      const dateMatch =
+        !this.filters.date || order.tanggal === this.filters.date;
+      return nameMatch && dateMatch;
+    });
+  }
+
+  get paginatedOrders() {
+    return this.orders;
+  }
+
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.fetchMealTodayData();
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.fetchMealTodayData();
+    }
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.fetchMealTodayData();
+    }
+  }
+
   // Helper function for template access
   Math = Math;
+
+  ngOnInit(): void {
+    this.fetchMealTodayData();
+    const state = history.state;
+    if (state?.message) {
+      this.successMessage = state.message;
+
+      setTimeout(() => {
+        this.successMessage = null;
+      }, 5000);
+    }
+  }
 }

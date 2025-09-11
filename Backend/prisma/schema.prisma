@@ -107,8 +107,8 @@ model MealRequest {
   updated_at   DateTime  @updatedAt
   deleted_at   DateTime?
 
-  MempData  MempData   @relation(fields: [pr_number], references: [strprno])
-  details   MealRequestDetail[]
+  MempData     MempData           @relation(fields: [pr_number], references: [strprno])
+  details      MealRequestDetail[]
 
   @@schema("public")
 }
@@ -117,7 +117,10 @@ model MealRequestDetail {
   id              Int       @id @default(autoincrement())
   meal_request_id Int
   emp_pr_number   String?
+
+  // 👇 hanya simpan tanggal, tanpa jam
   date            DateTime  @db.Date  
+
   is_selected     Boolean   @default(false)
   is_taken        Boolean   @default(false)
   taken_at        DateTime?
@@ -126,12 +129,11 @@ model MealRequestDetail {
   updated_at      DateTime  @updatedAt
   deleted_at      DateTime?
 
-  MealRequest MealRequest @relation(fields: [meal_request_id], references: [id], onDelete: Cascade)
+  MealRequest     MealRequest @relation(fields: [meal_request_id], references: [id], onDelete: Cascade)
 
   @@index([meal_request_id])
   @@schema("public")
 }
-
 
 model Guest {
   id            Int       @id @default(autoincrement())
