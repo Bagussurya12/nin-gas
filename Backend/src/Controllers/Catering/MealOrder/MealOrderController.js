@@ -132,7 +132,6 @@ class MealOrderController {
       const meal = await prisma.mealRequest.findUnique({
         where: { id: parseInt(id) },
         include: {
-          MempData: true,
           details: true,
         },
       });
@@ -153,7 +152,6 @@ class MealOrderController {
     }
   }
 
-  // CREATE a new meal request
   async create(req, res) {
     const { pr_number, name, section, shift, confirmation, details } = req.body;
 
@@ -209,6 +207,31 @@ class MealOrderController {
         success: false,
         message: "Failed to update meal request",
         error,
+      });
+    }
+  }
+
+  async updateMealTake(req, res) {
+    try {
+      const { id } = req.params;
+
+      const updatedDetail = await prisma.mealRequestDetail.update({
+        where: { id: Number(id) },
+        data: {
+          is_taken: true,
+          taken_at: new Date(),
+        },
+      });
+      res.json({
+        success: true,
+        message: "Meal request detail updated successfully",
+        data: updatedDetail,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: "Failed to update meal request detail",
+        error: error.message,
       });
     }
   }

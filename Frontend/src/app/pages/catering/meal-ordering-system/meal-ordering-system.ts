@@ -26,6 +26,15 @@ export class MealOrderingSystem {
   pageSize = 10;
   sortColumn = '';
   sortDirection = 'asc';
+  isViewDetailModal: boolean = false;
+  detailOrder: any = null;
+  isViewUpdateTakenModal: boolean = false;
+  selectedOrderId: number | null = null;
+
+  openConfirmModal(orderId: number) {
+    this.selectedOrderId = orderId;
+    this.isViewUpdateTakenModal = true;
+  }
 
   constructor(private apiService: ApiService, private router: Router) {}
 
@@ -69,10 +78,24 @@ export class MealOrderingSystem {
     });
   }
 
-  viewDetails(order: any) {
-    // In a real application, this would open a modal or navigate to a details page
-    console.log('View details for order:', order);
-    alert(`Details for ${order.nama} (${order.prNumber}) would be shown here.`);
+  async viewDetails(mealId: number) {
+    this.loading = true;
+    this.isViewDetailModal = true;
+    try {
+      const res = await this.apiService.get(`/meal/${mealId}`);
+      this.detailOrder = res.data.data; // simpan detail
+    } catch (error: any) {
+      this.error =
+        error.response?.data?.message || 'Sorry, Something Went Wrong';
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  closeModal() {
+    this.isViewDetailModal = false;
+    this.isViewUpdateTakenModal = false;
+    this.detailOrder = null;
   }
 
   editOrder(order: any) {
@@ -184,6 +207,23 @@ export class MealOrderingSystem {
     }
   }
 
+  async confirmTakeOrder() {
+    if (!this.selectedOrderId) return;
+
+    try {
+      await this.apiService.put(`/meal/taken/${this.selectedOrderId}`, {
+        is_taken: true,
+      });
+
+      this.fetchMealTodayData();
+      this.successMessage = 'Data berhasil diubah!';
+    } catch (error) {
+      console.error(error);
+      this.error = 'Oops, ada kesalahan. silakan coba lagi nanti!';
+    } finally {
+      this.closeModal();
+    }
+  }
   // Helper function for template access
   Math = Math;
 

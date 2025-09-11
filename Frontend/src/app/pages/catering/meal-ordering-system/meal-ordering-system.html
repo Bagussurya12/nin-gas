@@ -367,7 +367,28 @@
               <td class="px-6 py-4 whitespace-nowrap text-center">
                 <div class="flex justify-center space-x-2">
                   <button
-                    (click)="viewDetails(order)"
+                    *ngIf="order.details[0]?.is_taken === false"
+                    (click)="openConfirmModal(order.details[0].id)"
+                    class="p-1.5 text-yellow-600 bg-yellow-100 rounded-md hover:bg-yellow-200 transition-colors duration-200"
+                    title="View Details"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="h-4 w-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    (click)="viewDetails(order.id)"
                     class="p-1.5 text-blue-600 bg-blue-100 rounded-md hover:bg-blue-200 transition-colors duration-200"
                     title="View Details"
                   >
@@ -524,6 +545,335 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Detail -->
+<div
+  *ngIf="isViewDetailModal"
+  class="fixed inset-0 z-50 overflow-y-auto"
+  aria-labelledby="modal-title"
+  aria-modal="true"
+  role="dialog"
+>
+  <!-- Overlay dengan animasi -->
+  <div
+    class="fixed inset-0 backdrop-blur-sm transition-opacity duration-300 bg-black/40"
+    [class]="isViewDetailModal ? 'opacity-100' : 'opacity-0'"
+    (click)="closeModal()"
+  ></div>
+
+  <!-- Modal Container -->
+  <div class="flex min-h-screen items-center justify-center p-4">
+    <!-- Modal Card dengan animasi scale dan fade -->
+    <div
+      class="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all duration-300"
+      [class]="
+        isViewDetailModal ? 'scale-100 opacity-100' : 'scale-95 opacity-0'
+      "
+    >
+      <!-- Header dengan gradient -->
+      <div
+        class="bg-gradient-to-r from-blue-800 to-blue-600 rounded-t-2xl p-5 text-white"
+      >
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="bg-white/20 p-2 rounded-lg">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold">Detail Meal Request</h2>
+              <p class="text-blue-100 text-sm">
+                Informasi lengkap permintaan makan
+              </p>
+            </div>
+          </div>
+          <button
+            (click)="closeModal()"
+            class="text-white/80 hover:text-white transition-transform hover:scale-110"
+            aria-label="Close modal"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div *ngIf="detailOrder" class="p-6">
+        <!-- Grid container dengan 2 kolom -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <!-- PR Number -->
+          <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+            <div class="bg-blue-100 p-3 rounded-lg flex-shrink-0">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-blue-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-gray-500">PR Number</p>
+              <p class="text-sm font-semibold text-blue-600 truncate">
+                {{ detailOrder.pr_number }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Name -->
+          <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+            <div class="bg-purple-100 p-3 rounded-lg flex-shrink-0">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-purple-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-gray-500">Name</p>
+              <p class="text-sm font-medium truncate">{{ detailOrder.name }}</p>
+            </div>
+          </div>
+
+          <!-- Section -->
+          <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+            <div class="bg-green-100 p-3 rounded-lg flex-shrink-0">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-5 w-5 text-green-600"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"
+                />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-gray-500">Section</p>
+              <span
+                class="px-3 py-1.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800 inline-block mt-1"
+              >
+                {{ detailOrder.section }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Shift -->
+          <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+            <div class="bg-amber-100 p-3 rounded-lg flex-shrink-0">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-amber-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-gray-500">Shift</p>
+              <p class="text-sm truncate">{{ detailOrder.shift }}</p>
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div
+            *ngIf="detailOrder.details?.length > 0"
+            class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg"
+          >
+            <div class="bg-pink-100 p-3 rounded-lg flex-shrink-0">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-pink-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-gray-500">Date</p>
+              <p class="text-lg truncate">
+                {{ detailOrder.details[0].date | date : "mediumDate" }}
+              </p>
+            </div>
+          </div>
+
+          <!-- Status -->
+          <div
+            *ngIf="detailOrder.details?.length > 0"
+            class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg"
+          >
+            <div class="bg-indigo-100 p-3 rounded-lg flex-shrink-0">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 text-indigo-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <div class="min-w-0">
+              <p class="text-sm text-gray-500">Status</p>
+              <span
+                class="px-3 py-1.5 rounded-full text-sm font-semibold inline-block mt-1"
+                [ngClass]="{
+                  'bg-green-100 text-green-800 flex items-center space-x-1':
+                    detailOrder.details[0].is_taken === true,
+                  'bg-yellow-100 text-yellow-800 flex items-center space-x-1':
+                    detailOrder.details[0].is_taken === false
+                }"
+              >
+                <svg
+                  *ngIf="detailOrder.details[0].is_taken"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                <svg
+                  *ngIf="!detailOrder.details[0].is_taken"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>{{
+                  detailOrder.details[0].is_taken ? "Diambil" : "Belum Diambil"
+                }}</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="bg-gray-50 rounded-b-2xl px-6 py-4 flex justify-end mt-4">
+        <button
+          (click)="closeModal()"
+          class="px-5 py-2.5 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-md hover:shadow-lg flex items-center space-x-2"
+        >
+          <span>Close</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Background blur -->
+<div
+  *ngIf="isViewUpdateTakenModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+>
+  <!-- Modal box -->
+  <div
+    class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 animate-fadeIn"
+  >
+    <h2 class="text-lg font-bold text-gray-800 mb-4">
+      Konfirmasi Ambil Pesanan
+    </h2>
+    <p class="text-gray-600 mb-6">
+      Apakah kamu yakin ingin menandai pesanan ini sebagai
+      <span class="font-semibold text-green-600">sudah diambil</span>?
+    </p>
+
+    <div class="flex justify-end space-x-3">
+      <button
+        (click)="closeModal()"
+        class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-100 transition"
+      >
+        Batal
+      </button>
+      <button
+        (click)="confirmTakeOrder()"
+        class="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition"
+      >
+        Ya, Ambil
+      </button>
     </div>
   </div>
 </div>

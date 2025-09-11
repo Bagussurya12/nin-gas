@@ -118,7 +118,6 @@ model MealRequestDetail {
   meal_request_id Int
   emp_pr_number   String?
 
-  // 👇 hanya simpan tanggal, tanpa jam
   date            DateTime  @db.Date  
 
   is_selected     Boolean   @default(false)

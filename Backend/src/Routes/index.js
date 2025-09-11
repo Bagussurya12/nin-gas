@@ -113,6 +113,13 @@ router.put(
   MealOrderController.update.bind(MealOrderController)
 );
 
+router.put(
+  "/meal/taken/:id",
+  jwtAuth(),
+  checkPermission("MealRequest - Can Update MealRequest"),
+  MealOrderController.updateMealTake.bind(MealOrderController)
+);
+
 router.delete(
   "/meal/:id",
   jwtAuth(),
