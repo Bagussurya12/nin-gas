@@ -15,7 +15,7 @@ export class MealOrderingSystem {
   orders: any[] = [];
   showImportSection = false;
   loading: boolean = false;
-  error: string | null = null;
+  errorMessage: string | null = null;
   successMessage: string | null = null;
   searchTerm: string = '';
   page: number = 1;
@@ -85,8 +85,10 @@ export class MealOrderingSystem {
       const res = await this.apiService.get(`/meal/${mealId}`);
       this.detailOrder = res.data.data; // simpan detail
     } catch (error: any) {
-      this.error =
-        error.response?.data?.message || 'Sorry, Something Went Wrong';
+      this.errorMessage = 'Oops, ada kesalahan. silakan coba lagi nanti!';
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 3000);
     } finally {
       this.loading = false;
     }
@@ -153,8 +155,10 @@ export class MealOrderingSystem {
       this.totalOrders = res.data.paginate.total;
       this.totalPages = res.data.paginate.last_page;
     } catch (error: any) {
-      this.error =
-        error.response?.data?.message || 'Sorry, Something Went Wrong';
+      this.errorMessage = 'Oops, ada kesalahan. silakan coba lagi nanti!';
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 3000);
     } finally {
       this.loading = false;
     }
@@ -217,9 +221,14 @@ export class MealOrderingSystem {
 
       this.fetchMealTodayData();
       this.successMessage = 'Data berhasil diubah!';
+      setTimeout(() => {
+        this.successMessage = null;
+      }, 3000);
     } catch (error) {
-      console.error(error);
-      this.error = 'Oops, ada kesalahan. silakan coba lagi nanti!';
+      this.errorMessage = 'Oops, ada kesalahan. silakan coba lagi nanti!';
+      setTimeout(() => {
+        this.errorMessage = null;
+      }, 3000);
     } finally {
       this.closeModal();
     }
