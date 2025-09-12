@@ -13,6 +13,7 @@ async function seedMealRequests() {
       for (let i = 0; i < 5; i++) {
         const date = new Date();
         date.setDate(date.getDate() + i);
+
         await prisma.mealRequest.create({
           data: {
             pr_number: emp.strprno,
@@ -21,14 +22,13 @@ async function seedMealRequests() {
             shift: emp.strshift || null,
             confirmation: false,
             details: {
-              create: [
-                {
-                  emp_pr_number: emp.strprno,
-                  date: date,
-                  is_selected: getRandomBoolean(),
-                  is_taken: false,
-                },
-              ],
+              create: Array.from({ length: 5 }, (_, idx) => ({
+                emp_pr_number: emp.strprno,
+                date: date,
+                is_selected: getRandomBoolean(),
+                is_taken: false,
+                menu_id: idx + 1, // menu_id dari 1 sampai 5
+              })),
             },
           },
         });
@@ -39,7 +39,7 @@ async function seedMealRequests() {
       }
     }
 
-    console.log("Seeding MealRequest for 2 days finished!");
+    console.log("✅ Seeding MealRequest with menu_id 1-5 finished!");
   } catch (error) {
     console.error("Seeder error:", error);
   } finally {

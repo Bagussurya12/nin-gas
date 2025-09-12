@@ -127,9 +127,45 @@ export class MealOrderingSystem {
   }
 
   downloadSample() {
-    // In a real application, this would download a sample file
-    console.log('Downloading sample file...');
-    alert('Sample file download would be implemented here.');
+    const csvData = [
+      [
+        'pr_number',
+        'name',
+        'section',
+        'confirmation',
+        'senin',
+        'selasa',
+        'rabu',
+        'kamis',
+        'jumat',
+      ],
+      ['PR001', 'John Doe', 'Section A', 'Yes', 'Yes', 'Yes', 'No', 'No', 'No'],
+      [
+        'PR002',
+        'Jane Smith',
+        'Section B',
+        'No',
+        'Yes',
+        'Yes',
+        'No',
+        'No',
+        'No',
+      ],
+    ];
+
+    const csvContent = csvData.map((e) => e.join(',')).join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'sample_meal_request.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }
 
   async fetchMealTodayData() {
