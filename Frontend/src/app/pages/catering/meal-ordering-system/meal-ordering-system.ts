@@ -78,11 +78,13 @@ export class MealOrderingSystem {
     });
   }
 
-  async viewDetails(mealId: number) {
+  async viewDetails(mealId: number, detailId: number) {
     this.loading = true;
     this.isViewDetailModal = true;
     try {
-      const res = await this.apiService.get(`/meal/${mealId}`);
+      const res = await this.apiService.get(
+        `/meal/${mealId}?detailId=${detailId}`
+      );
       this.detailOrder = res.data.data; // simpan detail
     } catch (error: any) {
       this.errorMessage = 'Oops, ada kesalahan. silakan coba lagi nanti!';
@@ -93,19 +95,16 @@ export class MealOrderingSystem {
       this.loading = false;
     }
   }
+  editOrder(mealId: number, detailId: number) {
+    this.router.navigate(['/gas/catering/meal-ordering-system/edit', mealId], {
+      queryParams: { detailId: detailId },
+    });
+  }
 
   closeModal() {
     this.isViewDetailModal = false;
     this.isViewUpdateTakenModal = false;
     this.detailOrder = null;
-  }
-
-  editOrder(order: any) {
-    // In a real application, this would open an edit form
-    console.log('Edit order:', order);
-    alert(
-      `Edit form for ${order.nama} (${order.prNumber}) would be shown here.`
-    );
   }
 
   toggleImportSection() {
@@ -220,7 +219,7 @@ export class MealOrderingSystem {
       });
 
       this.fetchMealTodayData();
-      this.successMessage = 'Data berhasil diubah!';
+      this.successMessage = 'Data berhasil diupdate!';
       setTimeout(() => {
         this.successMessage = null;
       }, 3000);
@@ -237,6 +236,14 @@ export class MealOrderingSystem {
   Math = Math;
 
   ngOnInit(): void {
+    if (history.state && history.state.successMessage) {
+      this.successMessage = history.state.successMessage;
+
+      // Hapus pesan setelah 3 detik
+      setTimeout(() => {
+        this.successMessage = null;
+      }, 3000);
+    }
     this.fetchMealTodayData();
     const state = history.state;
     if (state?.message) {

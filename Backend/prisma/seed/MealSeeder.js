@@ -10,7 +10,7 @@ async function seedMealRequests() {
     const employees = await prisma.mempData.findMany();
 
     for (const emp of employees) {
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < 5; i++) {
         const date = new Date();
         date.setDate(date.getDate() + i);
         await prisma.mealRequest.create({

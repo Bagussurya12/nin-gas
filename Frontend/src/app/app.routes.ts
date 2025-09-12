@@ -129,6 +129,21 @@ export const routes: Routes = [
   },
 
   {
+    path: 'gas/catering/meal-ordering-system/edit/:id',
+    canActivate: [IsLoggedInGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./pages/catering/meal-ordering-system/edit/edit.module').then(
+            (m) => m.EditModule
+          ),
+        canActivate: [IsLoggedInGuard],
+        data: { layout: 'app' },
+      },
+    ],
+  },
+  {
     path: 'gas/catering/meal-ordering-system/create',
     canActivate: [IsLoggedInGuard],
     children: [

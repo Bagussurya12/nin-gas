@@ -12,18 +12,22 @@ interface MealRequestDetail {
 }
 
 @Component({
-  selector: 'app-create',
-  standalone: true,
+  selector: 'app-edit',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './create.html',
-  styleUrl: './create.css',
+  templateUrl: './edit.html',
+  styleUrl: './edit.css',
 })
-export class Create implements OnInit {
+export class Edit {
   mealRequestForm: FormGroup;
   isLoading = false;
   employees: any[] = [];
   filteredEmployees: any[] = [];
   showSuggestions = false;
+  loading = false;
+  error: string | null = null;
+  success: string | null = null;
+  private MealReqId!: string;
+  private detailId!: string;
 
   constructor(
     private fb: FormBuilder,
@@ -43,26 +47,14 @@ export class Create implements OnInit {
   }
 
   ngOnInit(): void {
+    this.MealReqId = this.route.snapshot.paramMap.get('id')!;
+    this.detailId = this.route.snapshot.queryParamMap.get('detailId')!; // ambil detailId dari query param
     this.loadEmployees();
-    this.addDetail(); // Add one detail row by default
+    this.getMealData();
   }
 
   get details(): FormArray {
     return this.mealRequestForm.get('details') as FormArray;
-  }
-
-  createDetail(): FormGroup {
-    return this.fb.group({
-      date: ['', Validators.required],
-      is_taken: [false],
-      is_selected: [true],
-    });
-  }
-
-  addDetail(): void {
-    if (this.details.length < 5) {
-      this.details.push(this.createDetail());
-    }
   }
 
   removeDetail(index: number): void {
@@ -136,18 +128,58 @@ export class Create implements OnInit {
         return;
       }
 
-      await this.apiService.post('/meal', payload, {
+      await this.apiService.put(`/meal/${this.MealReqId}`, payload, {
         'Content-Type': 'application/json',
       });
 
       this.router.navigate(['/gas/catering/meal-ordering-system'], {
-        state: { successMessage: 'Data Berhasil Dibuat' },
+        state: { successMessage: 'Data Berhasil Diupdate' },
       });
     } catch (error) {
       console.error('Error creating meal request:', error);
       alert('Failed to create meal request. Please try again.');
     } finally {
       this.isLoading = false;
+    }
+  }
+
+  async getMealData() {
+    try {
+      const url = this.detailId
+        ? `/meal/${this.MealReqId}?detailId=${this.detailId}`
+        : `/meal/${this.MealReqId}`;
+
+      const response = await this.apiService.get(url);
+      const reqMeal = response.data.data;
+
+      this.mealRequestForm.patchValue({
+        pr_number: reqMeal.pr_number,
+        name: reqMeal.name,
+        section: reqMeal.section,
+        shift: reqMeal.shift,
+        confirmation: reqMeal.confirmation,
+      });
+
+      this.details.clear();
+
+      reqMeal.details.forEach((detail: any) => {
+        const dateValue = new Date(detail.date).toISOString().split('T')[0]; // "YYYY-MM-DD"
+        const detailGroup = this.fb.group({
+          id: [detail.id],
+          emp_pr_number: [detail.emp_pr_number],
+          date: [dateValue, Validators.required], // <-- patch dengan format YYYY-MM-DD
+          is_taken: [detail.is_taken],
+          is_selected: [detail.is_selected],
+        });
+        this.details.push(detailGroup);
+      });
+
+      this.success = 'Berhasil ambil data';
+      setTimeout(() => {
+        this.success = null;
+      }, 2000);
+    } catch (err: any) {
+      this.error = err.response?.data?.message || 'Gagal ambil data';
     }
   }
 }

@@ -321,20 +321,6 @@
               >
                 <div class="flex items-center">
                   <span>PR Number</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 ml-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                    />
-                  </svg>
                 </div>
               </th>
               <th
@@ -343,20 +329,6 @@
               >
                 <div class="flex items-center">
                   <span>Nama</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 ml-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                    />
-                  </svg>
                 </div>
               </th>
               <th class="px-6 py-3 text-left font-medium text-sm">Section</th>
@@ -366,20 +338,6 @@
               >
                 <div class="flex items-center">
                   <span>Tanggal</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 ml-1"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-                    />
-                  </svg>
                 </div>
               </th>
               <th class="px-6 py-3 text-center font-medium text-sm">Status</th>
@@ -460,7 +418,8 @@
                     </svg>
                   </button>
                   <button
-                    (click)="viewDetails(order.id)"
+                    type="button"
+                    (click)="viewDetails(order.id, order.details[0].id)"
                     class="p-1.5 text-blue-600 bg-blue-100 rounded-md hover:bg-blue-200 transition-colors duration-200"
                     title="View Details"
                   >
@@ -486,7 +445,8 @@
                     </svg>
                   </button>
                   <button
-                    (click)="editOrder(order)"
+                    type="button"
+                    (click)="editOrder(order.id, order.details[0].id)"
                     class="p-1.5 text-green-600 bg-green-100 rounded-md hover:bg-green-200 transition-colors duration-200"
                     title="Edit"
                   >
